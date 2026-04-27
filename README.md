@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <img src=".github/autopipe-logo.svg" width="600"/>
+</div>
 
-## Getting Started
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+ 
+### What is Autopipe?
+**Autopipe** is a visual workflow automation platform that lets you connect your favorite apps and automate repetitive tasks — without writing a single line of code.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Built around an intuitive drag-and-drop canvas, Autopipe lets you create automation pipelines by linking triggers, actions, and integrations. Need more power? Drop in AI steps powered by OpenAI or Claude and let intelligence handle the logic.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Think of it as your own automation layer — faster and more affordable than Zapier, more approachable than n8n.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+</br>
+</br>
+</br>
 
-## Learn More
+### Features
+ 
+- 🎨 **Visual canvas** — drag-and-drop workflow builder with real-time preview
+- ⚡ **Multiple triggers** — webhooks, schedules, form submissions, and app events
+- 🤖 **AI-powered steps** — native integrations with OpenAI and Claude
+- 🔌 **App integrations** — Gmail, Slack, Notion, Stripe, Google Sheets, and more
+- 🔁 **Background execution** — robust job queue system for reliable workflow runs
+- 📊 **Real-time monitoring** — execution logs, error tracking, and status dashboard
+- 🔐 **Authentication** — secure user accounts with role-based access
+- 💳 **Subscription plans** — Free, Pro, and Team tiers powered by Stripe
+- 🚧 **Paywalls & usage limits** — built-in billing gates per plan
 
-To learn more about Next.js, take a look at the following resources:
+ 
+</br>
+</br>
+</br>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Tech Stack
+ 
+| Layer | Technology |
+|---|---|
+| Framework | Next.js  (App Router) |
+| Language | TypeScript |
+| Database | PostgreSQL + Prisma ORM |
+| Auth | Clerk |
+| Payments | Stripe |
+| Job Queue | Inngest |
+| AI | OpenAI SDK / Anthropic SDK |
+| Styling | Tailwind CSS |
+| Error Tracking | Sentry |
+| Deployment | Vercel |
+ 
+</br>
+</br>
+</br>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Roadmap
+ 
+- [x] Project setup & authentication
+- [x] Visual canvas (drag-and-drop)
+- [x] Workflow triggers & actions
+- [x] AI integrations (OpenAI / Claude)
+- [x] Background job execution
+- [x] Subscription & billing (Stripe)
+- [ ] More app integrations
+- [ ] Team workspaces
+- [ ] Workflow templates marketplace
+- [ ] Analytics dashboard
