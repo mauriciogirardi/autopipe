@@ -21,6 +21,9 @@ jobs:
 
       - run: pnpm install
 
+      - name: Generate Prisma Client
+        run: pnpm exec prisma generate
+
       - name: Lint & Format
         run: pnpm exec biome ci .
 
