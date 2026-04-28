@@ -3,8 +3,6 @@
 </div>
 
 
-
- 
 ### What is Autopipe?
 **Autopipe** is a visual workflow automation platform that lets you connect your favorite apps and automate repetitive tasks — without writing a single line of code.
 
