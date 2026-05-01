@@ -1,7 +1,16 @@
+import { requireAuth } from '@/lib/auth-utils'
 import { caller } from '@/trpc/server'
+import { LogoutButton } from './logout-button'
 
 export default async function Home() {
-  const users = await caller.getUsers()
+  await requireAuth()
+  const user = await caller.getUsers()
 
-  return <div>{JSON.stringify(users, null, 2)}</div>
+  return (
+    <div>
+      <p>{user[0].name}</p>
+      <div>Protect page</div>
+      <LogoutButton />
+    </div>
+  )
 }
