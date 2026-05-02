@@ -5,10 +5,8 @@ export default async function LoginPage() {
   await requireUnauth()
 
   return (
-    <div className="flex flex-col p-4 items-center justify-center h-dvh w-full">
-      <div className="w-full md:w-96">
-        <LoginForm />
-      </div>
+    <div className="animate-fade-scale">
+      <LoginForm />
     </div>
   )
 }

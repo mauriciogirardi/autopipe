@@ -20,6 +20,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { LINKS } from '@/constants/links'
 import { authClient } from '@/lib/auth-client'
+import { GithubButtonLogin } from './github-button-login'
+import { GoogleButtonLogin } from './google-button-login'
 
 const loginSchema = z.object({
   email: z.email('Please enter a valid email address.'),
@@ -72,12 +74,8 @@ export function LoginForm() {
             <form onSubmit={form.handleSubmit(handleSubmitLogin)}>
               <div className="grid gap-6">
                 <div className="flex flex-col gap-4">
-                  <Button variant="outline" className="full" type="button" disabled={isPending}>
-                    Continue with Github
-                  </Button>
-                  <Button variant="outline" className="full" type="button" disabled={isPending}>
-                    Continue with Google
-                  </Button>
+                  <GithubButtonLogin disabled={isPending} />
+                  <GoogleButtonLogin disabled={isPending} />
                 </div>
 
                 <div className="grid gap-6">
