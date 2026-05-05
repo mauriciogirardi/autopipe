@@ -12,7 +12,7 @@ model User {
   id            String    @id @default(cuid())
   email         String    @unique
   name          String?
-  emailVerified Boolean   @default(false)
+  emailVerified  Boolean   @default(false)
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -60,7 +60,7 @@ model Account {
 
 model Verification {
   id         String   @id
-  identifier String
+  identifier  String
   value      String
   expiresAt  DateTime
   createdAt  DateTime @default(now())
@@ -68,4 +68,11 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Workflow {
+  id   String @id @default(cuid())
+  name String
+
+  @@map("workflow")
 }
