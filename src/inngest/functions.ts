@@ -1,14 +1,20 @@
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
+import { generateText } from 'ai'
 import { inngest } from './client'
 
+const google = createGoogleGenerativeAI()
+
 export const processTask = inngest.createFunction(
-  { id: 'process-task', triggers: { event: 'app/task.created' } },
-  async ({ event, step }) => {
-    const result = await step.run('handle-task', async () => {
-      return { processed: true, id: event.data.id }
+  { id: 'execute', triggers: { event: 'execute/ai' } },
+  async ({ step }) => {
+    const { steps: geminiSteps } = await step.ai.wrap('gemini-generate-text', generateText, {
+      system: 'You are a helpful assistant.',
+      prompt: 'What is 2 + 2?',
+      model: google('gemini-2.5-flash'),
     })
 
-    await step.sleep('pause', '1s')
-
-    return { message: `Task ${event.data.name} complete`, result }
+    return {
+      geminiSteps,
+    }
   },
 )
