@@ -3,4 +3,6 @@ export const LINKS = {
   SIGNUP: '/signup',
   WORKFLOWS: '/workflows',
   HOME: '/',
-}
+  CREDENTIALS: '/credentials',
+  EXECUTIONS: '/executions',
+} as const
