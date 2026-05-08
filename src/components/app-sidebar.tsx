@@ -11,6 +11,7 @@ import {
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { LINKS } from '@/constants/links'
+import { useHasActiveSubscription } from '@/features/subscriptions/use-subscription'
 import { authClient } from '@/lib/auth-client'
 import {
   Sidebar,
@@ -38,6 +39,9 @@ const menuItems = [
 export function AppSidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const { hasActiveSubscription, isLoading } = useHasActiveSubscription()
+
+  const showSubscriptionButton = !hasActiveSubscription && !isLoading
 
   const handleSignOut = () => {
     authClient.signOut({
@@ -47,6 +51,14 @@ export function AppSidebar() {
         },
       },
     })
+  }
+
+  const handleUpgradePro = () => {
+    authClient.checkout({ slug: 'pro' })
+  }
+
+  const handlePortal = () => {
+    authClient.customer.portal()
   }
 
   return (
@@ -89,15 +101,25 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <SidebarMenu className="space-y-2">
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Upgrade to Pro" className="gap-x-3 h-10 px-4">
-              <StarIcon className="size-4" />
-              <span>Upgrade to Pro</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {showSubscriptionButton && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={handleUpgradePro}
+                tooltip="Upgrade to Pro"
+                className="gap-x-3 h-10 px-4"
+              >
+                <StarIcon className="size-4" />
+                <span>Upgrade to Pro</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
 
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Billing Portal" className="gap-x-3 h-10 px-4">
+            <SidebarMenuButton
+              onClick={handlePortal}
+              tooltip="Billing Portal"
+              className="gap-x-3 h-10 px-4"
+            >
               <CreditCardIcon className="size-4" />
               <span>Billing Portal</span>
             </SidebarMenuButton>
