@@ -68,7 +68,7 @@ export function AppSidebar() {
           <SidebarMenuButton asChild className="gap-x-3 h-10 px-4">
             <Link href={LINKS.WORKFLOWS} prefetch>
               {/** biome-ignore lint/performance/noImgElement: not otimize */}
-              <img src="logo.svg" alt="Autopipe" className="size-6" />
+              <img src="/logo.svg" alt="Autopipe" className="size-6" />
               <span className="font-bold">Autopipe</span>
             </Link>
           </SidebarMenuButton>
