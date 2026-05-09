@@ -61,6 +61,11 @@ export function AppSidebar() {
     authClient.customer.portal()
   }
 
+  const isActive = (url: string) => {
+    const stripped = pathname.replace(/^\/(en|pt)/, '')
+    return stripped.startsWith(url)
+  }
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -83,7 +88,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     tooltip={item.title}
-                    isActive={pathname.startsWith(item.url)}
+                    isActive={isActive(item.url)}
                     asChild
                     className="gap-x-3 my-2 h-10 px-4 flex"
                   >

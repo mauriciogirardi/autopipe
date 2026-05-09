@@ -1,13 +1,26 @@
+import type { Metadata } from 'next'
+import type { SearchParams } from 'nuqs/server'
 import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { WorkflowsContainer, WorkflowsList } from '@/features/workflows/components/workflows'
+import { workflowsParamsLoader } from '@/features/workflows/server/params-loader'
 import { prefetchWorkflows } from '@/features/workflows/server/prefetch'
 import { requireAuth } from '@/lib/auth-utils'
 import { HydrateClient } from '@/trpc/server'
 
-export default async function WorkflowsPage() {
+export const metadata: Metadata = {
+  title: 'Workflows',
+}
+
+type WorkflowsPageProps = {
+  searchParams: Promise<SearchParams>
+}
+
+export default async function WorkflowsPage({ searchParams }: WorkflowsPageProps) {
   await requireAuth()
-  prefetchWorkflows()
+  const params = await workflowsParamsLoader(searchParams)
+
+  prefetchWorkflows(params)
 
   return (
     <WorkflowsContainer>

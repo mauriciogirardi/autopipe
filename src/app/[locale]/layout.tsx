@@ -4,6 +4,7 @@ import '../globals.css'
 import { notFound } from 'next/navigation'
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { getMessages, getTranslations } from 'next-intl/server'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from '@/components/ui/sonner'
 import type { TLanguage } from '@/i18n/request'
 import { routing } from '@/i18n/routing'
@@ -66,7 +67,7 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              {children}
+              <NuqsAdapter>{children}</NuqsAdapter>
               <Toaster position="top-right" />
             </ThemeProvider>
           </NextIntlClientProvider>
