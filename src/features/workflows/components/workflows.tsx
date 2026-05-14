@@ -1,12 +1,16 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import {
+  EmptyView,
   EntityContainer,
   EntityHeader,
+  EntityList,
   EntityPagination,
   EntitySearch,
+  ErrorView,
+  LoadingView,
 } from '@/components/entity-components'
 import { LINKS } from '@/constants/links'
 import { useEntitySearch } from '@/hooks/use-entity-search'
@@ -15,12 +19,18 @@ import { useCreateWorkflow, useSuspenseWorkflows } from '../hooks/use-workflows'
 import { useWorkflowsParams } from '../hooks/use-workflows-params'
 
 export function WorkflowsList() {
+  const searchParams = useSearchParams()
+  const search = searchParams.get('search')
+
   const workflows = useSuspenseWorkflows()
 
   return (
-    <div>
-      <p>{JSON.stringify(workflows.data, null, 2)}</p>
-    </div>
+    <EntityList
+      items={workflows.data.workflows}
+      getKey={(workflow) => workflow.id}
+      renderItem={(workflow) => <p>{workflow.name}</p>}
+      emptyView={<WorkflowsEmpty search={search} />}
+    />
   )
 }
 
@@ -92,3 +102,43 @@ export function WorkflowsContainer({ children }: { children: React.ReactNode }) 
     </EntityContainer>
   )
 }
+
+export const WorkflowsLoading = () => {
+  return <LoadingView message="Loading workflows..." />
+}
+
+export const WorkflowsError = () => {
+  return <ErrorView message="Error loading workflows" />
+}
+
+export const WorkflowsEmpty = ({ search }: { search?: string | null }) => {
+  const router = useRouter()
+  const createWorkflow = useCreateWorkflow()
+  const { handleError, modal } = useUpgradeModal()
+
+  const handleCreate = () => {
+    createWorkflow.mutate(undefined, {
+      onError: handleError,
+      onSuccess: (data) => {
+        router.push(`${LINKS.WORKFLOWS}/${data.id}`)
+      },
+    })
+  }
+
+  return (
+    <>
+      {modal}
+      <EmptyView
+        {...(!search && { onNew: handleCreate })}
+        className="whitespace-pre-line"
+        message={
+          !search
+            ? `You haven't create any workflows yet.\nGet started by creating your first workflow.`
+            : `Not found workflow with name ${search}!`
+        }
+      />
+    </>
+  )
+}
+
+// 22
