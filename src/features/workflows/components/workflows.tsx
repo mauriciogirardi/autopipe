@@ -1,11 +1,14 @@
 'use client'
 
+import { formatDistanceToNow } from 'date-fns'
+import { WorkflowIcon } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import {
   EmptyView,
   EntityContainer,
   EntityHeader,
+  EntityItem,
   EntityList,
   EntityPagination,
   EntitySearch,
@@ -13,9 +16,10 @@ import {
   LoadingView,
 } from '@/components/entity-components'
 import { LINKS } from '@/constants/links'
+import type { Workflow } from '@/generated/prisma/client'
 import { useEntitySearch } from '@/hooks/use-entity-search'
 import { useUpgradeModal } from '@/hooks/use-upgrade-modal'
-import { useCreateWorkflow, useSuspenseWorkflows } from '../hooks/use-workflows'
+import { useCreateWorkflow, useRemoveWorkflow, useSuspenseWorkflows } from '../hooks/use-workflows'
 import { useWorkflowsParams } from '../hooks/use-workflows-params'
 
 export function WorkflowsList() {
@@ -28,7 +32,7 @@ export function WorkflowsList() {
     <EntityList
       items={workflows.data.workflows}
       getKey={(workflow) => workflow.id}
-      renderItem={(workflow) => <p>{workflow.name}</p>}
+      renderItem={(workflow) => <WorkflowItem data={workflow} />}
       emptyView={<WorkflowsEmpty search={search} />}
     />
   )
@@ -79,7 +83,7 @@ export function WorkflowsPagination() {
   const workflows = useSuspenseWorkflows()
   const [params, setParams] = useWorkflowsParams()
 
-  if (!workflows.data.hasNextPage) return null
+  if (!workflows.data.hasNextPage && !workflows.data.hasPreviousPage) return null
 
   return (
     <EntityPagination
@@ -141,4 +145,30 @@ export const WorkflowsEmpty = ({ search }: { search?: string | null }) => {
   )
 }
 
-// 22
+export const WorkflowItem = ({ data }: { data: Workflow }) => {
+  const removeWorkflow = useRemoveWorkflow()
+
+  const handleRemoveWorkflow = () => {
+    removeWorkflow.mutate({ id: data.id })
+  }
+
+  return (
+    <EntityItem
+      href={`${LINKS.WORKFLOWS}/${data.id}`}
+      title={data.name}
+      subtitle={
+        <>
+          Updated {formatDistanceToNow(data.updatedAt, { addSuffix: true })} &bull; Created{' '}
+          {formatDistanceToNow(data.createdAt, { addSuffix: true })}
+        </>
+      }
+      image={
+        <div className="size-8 flex items-center justify-center">
+          <WorkflowIcon className="size-5 text-muted-foreground" />
+        </div>
+      }
+      onRemove={handleRemoveWorkflow}
+      isRemoving={removeWorkflow.isPending}
+    />
+  )
+}

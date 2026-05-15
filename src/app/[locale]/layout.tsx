@@ -68,7 +68,7 @@ export default async function RootLayout({
               disableTransitionOnChange
             >
               <NuqsAdapter>{children}</NuqsAdapter>
-              <Toaster position="top-right" />
+              <Toaster position="bottom-right" />
             </ThemeProvider>
           </NextIntlClientProvider>
         </TRPCReactProvider>
