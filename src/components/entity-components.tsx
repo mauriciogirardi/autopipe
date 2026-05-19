@@ -172,7 +172,7 @@ export const LoadingView = ({ message, className }: StateViewProps) => {
   return (
     <div
       className={cn(
-        'flex justify-center items-center h-full flex-1 flex-col gap-y-4 animate-fade-up',
+        'flex justify-center items-center h-full flex-1 flex-col gap-y-4 animate-fade-in',
         className,
       )}
     >
@@ -186,12 +186,14 @@ export const ErrorView = ({ message, className }: StateViewProps) => {
   return (
     <div
       className={cn(
-        'flex justify-center items-center h-full flex-1 flex-col gap-y-4 animate-fade-up',
+        'flex justify-center items-center h-full flex-1 flex-col animate-fade-in',
         className,
       )}
     >
-      <AlertTriangleIcon className="size-6 text-rose-400" />
-      {!!message && <p className="text-sm text-muted-foreground">{message}</p>}
+      <div className=" border-dashed border-[0.5px] border-muted-foreground rounded-lg px-48 py-20 flex flex-col items-center gap-y-4">
+        <AlertTriangleIcon className="size-6 text-rose-400" />
+        {!!message && <p className="text-sm text-muted-foreground">{message}</p>}
+      </div>
     </div>
   )
 }
