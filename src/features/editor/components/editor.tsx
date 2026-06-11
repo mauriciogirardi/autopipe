@@ -1,8 +1,24 @@
 'use client'
 
+import {
+  addEdge,
+  applyEdgeChanges,
+  applyNodeChanges,
+  Background,
+  type ColorMode,
+  type Connection,
+  Controls,
+  type Edge,
+  type EdgeChange,
+  type Node,
+  type NodeChange,
+  Panel,
+  ReactFlow,
+} from '@xyflow/react'
 import { SaveIcon } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { useTheme } from 'next-themes'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ErrorView, LoadingView } from '@/components/entity-components'
 import {
   Breadcrumb,
@@ -14,20 +30,75 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import { NODE_COMPONENTS } from '@/constants'
 import { LINKS } from '@/constants/links'
 import {
   useSuspenseWorkflow,
   useUpdateWorkflowName,
 } from '@/features/workflows/hooks/use-workflows'
+import { EditorNodeButton } from './editor-node-button'
 
 type EditorProps = {
   workflowId: string
 }
 
 export const Editor = ({ workflowId }: EditorProps) => {
+  const { resolvedTheme } = useTheme()
   const { data: workflow } = useSuspenseWorkflow(workflowId)
 
-  return <p>{JSON.stringify(workflow, null, 2)}</p>
+  const [nodes, setNodes] = useState<Node[]>(workflow.nodes)
+  const [edges, setEdges] = useState<Edge[]>(workflow.edges)
+  const [mounted, setMounted] = useState(false)
+
+  const onNodesChange = useCallback(
+    (changes: NodeChange[]) =>
+      setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
+    [],
+  )
+
+  const onEdgesChange = useCallback(
+    (changes: EdgeChange[]) =>
+      setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
+    [],
+  )
+
+  const onConnect = useCallback(
+    (params: Connection) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+    [],
+  )
+
+  const bgColor =
+    resolvedTheme === 'light' ? 'oklch(0.9730 0.0133 286.1503)' : 'oklch(0.2284 0.0384 282.9324)'
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
+
+  return (
+    <div className="w-full h-full">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        colorMode={mounted ? (resolvedTheme as ColorMode) : 'system'}
+        fitView
+        nodeTypes={NODE_COMPONENTS}
+        proOptions={{
+          hideAttribution: true,
+        }}
+      >
+        <Background bgColor={bgColor} />
+        <Controls style={{ accentColor: 'red' }} />
+        <Panel position="top-right">
+          <EditorNodeButton />
+        </Panel>
+      </ReactFlow>
+    </div>
+  )
 }
 
 export const EditorLoading = () => {

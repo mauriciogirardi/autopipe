@@ -1,8 +1,7 @@
+@import '@xyflow/react/dist/style.css';
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-
-@import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -90,9 +89,20 @@
   --shadow-2xl: 0px 4px 10px 0px hsl(240 30% 25% / 0.30);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
+
+  /* React Flow */
+  --xy-node-background-color: #ffffff;
+  --xy-node-border: 1px solid oklch(0.5679 0.2113 276.7065);
+
+  
 }
 
 .dark {
+   /* React Flow */
+  --xy-node-background-color: oklch(0.3015 0.0572 282.4176);
+  --xy-node-border: 1px solid oklch(0.4509 0.1758 279.3838);
+  --xy-node-color-default: oklch(0.9185 0.0257 285.8834);
+
   --background: oklch(0.1743 0.0227 283.7998);
   --foreground: oklch(0.9185 0.0257 285.8834);
   --card: oklch(0.2284 0.0384 282.9324);
@@ -143,6 +153,7 @@
   --shadow-lg: 0px 4px 10px 0px hsl(240 30% 25% / 0.12), 0px 4px 6px -1px hsl(240 30% 25% / 0.12);
   --shadow-xl: 0px 4px 10px 0px hsl(240 30% 25% / 0.12), 0px 8px 10px -1px hsl(240 30% 25% / 0.12);
   --shadow-2xl: 0px 4px 10px 0px hsl(240 30% 25% / 0.30);
+
 }
 
 @theme inline {
@@ -198,10 +209,13 @@
   --shadow-2xl: var(--shadow-2xl);
 }
 
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

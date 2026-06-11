@@ -1,6 +1,7 @@
 'use client'
 
 import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 
 interface GithubButtonLoginProps {
@@ -8,9 +9,14 @@ interface GithubButtonLoginProps {
 }
 
 export function GithubButtonLogin({ disabled }: GithubButtonLoginProps) {
-  const { theme } = useTheme()
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
-  const logo = theme === 'dark' ? '/github-white.svg' : '/github.svg'
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const logo = mounted && resolvedTheme === 'dark' ? '/github-white.svg' : '/github.svg'
 
   return (
     <Button variant="outline" className="full" type="button" disabled={disabled}>

@@ -57,8 +57,9 @@ export default async function RootLayout({
     <html
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-dvh flex flex-col" cz-shortcut-listen="true" suppressHydrationWarning>
+      <body className="min-h-dvh flex flex-col" cz-shortcut-listen="true">
         <TRPCReactProvider>
           <NextIntlClientProvider messages={messages}>
             <ThemeProvider
