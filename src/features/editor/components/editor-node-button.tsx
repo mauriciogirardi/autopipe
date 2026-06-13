@@ -10,7 +10,13 @@ export const EditorNodeButton = memo(() => {
 
   return (
     <NodeSelector open={selectorOpen} onOpenChange={setSelectorOpen}>
-      <Button size="icon" variant="outline" className="bg-background">
+      <Button
+        size="icon"
+        variant="outline"
+        className="bg-background"
+        onClick={() => setSelectorOpen(true)}
+        aria-label="Todo"
+      >
         <PlusIcon aria-hidden="true" />
       </Button>
     </NodeSelector>

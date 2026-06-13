@@ -15,7 +15,8 @@ import {
   Panel,
   ReactFlow,
 } from '@xyflow/react'
-import { SaveIcon } from 'lucide-react'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { Loader2Icon, SaveIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -34,8 +35,10 @@ import { NODE_COMPONENTS } from '@/constants'
 import { LINKS } from '@/constants/links'
 import {
   useSuspenseWorkflow,
+  useUpdateWorkflow,
   useUpdateWorkflowName,
 } from '@/features/workflows/hooks/use-workflows'
+import { editorAtom } from '../store/atoms'
 import { EditorNodeButton } from './editor-node-button'
 
 type EditorProps = {
@@ -45,6 +48,8 @@ type EditorProps = {
 export const Editor = ({ workflowId }: EditorProps) => {
   const { resolvedTheme } = useTheme()
   const { data: workflow } = useSuspenseWorkflow(workflowId)
+
+  const setEditor = useSetAtom(editorAtom)
 
   const [nodes, setNodes] = useState<Node[]>(workflow.nodes)
   const [edges, setEdges] = useState<Edge[]>(workflow.edges)
@@ -90,6 +95,12 @@ export const Editor = ({ workflowId }: EditorProps) => {
         proOptions={{
           hideAttribution: true,
         }}
+        onInit={setEditor}
+        snapGrid={[10, 10]}
+        snapToGrid
+        panOnScroll
+        // panOnDrag={false}
+        // selectionOnDrag
       >
         <Background bgColor={bgColor} />
         <Controls style={{ accentColor: 'red' }} />
@@ -110,10 +121,30 @@ export const EditorError = () => {
 }
 
 export const EditorSaveButton = ({ workflowId }: EditorProps) => {
+  const editor = useAtomValue(editorAtom)
+  const saveWorkflow = useUpdateWorkflow()
+
+  const handleSave = () => {
+    if (!editor) return
+
+    const nodes = editor.getNodes()
+    const edges = editor.getEdges()
+
+    saveWorkflow.mutate({
+      nodes,
+      edges,
+      id: workflowId,
+    })
+  }
+
   return (
     <div className="ml-auto">
-      <Button size="sm">
-        <SaveIcon className="size-4" />
+      <Button size="sm" onClick={handleSave} disabled={saveWorkflow.isPending}>
+        {saveWorkflow.isPending ? (
+          <Loader2Icon className="size-4 animate-spin" />
+        ) : (
+          <SaveIcon className="size-4" />
+        )}
         Save
       </Button>
     </div>

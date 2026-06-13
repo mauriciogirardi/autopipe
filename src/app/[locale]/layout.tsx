@@ -1,6 +1,6 @@
+import { Provider } from 'jotai'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import '../globals.css'
 import { notFound } from 'next/navigation'
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { getMessages, getTranslations } from 'next-intl/server'
@@ -10,6 +10,8 @@ import type { TLanguage } from '@/i18n/request'
 import { routing } from '@/i18n/routing'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { TRPCReactProvider } from '@/trpc/client'
+
+import '../globals.css'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -68,8 +70,12 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <NuqsAdapter>{children}</NuqsAdapter>
-              <Toaster position="bottom-right" />
+              <NuqsAdapter>
+                <Provider>
+                  {children}
+                  <Toaster position="bottom-right" />
+                </Provider>
+              </NuqsAdapter>
             </ThemeProvider>
           </NextIntlClientProvider>
         </TRPCReactProvider>

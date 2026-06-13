@@ -1,18 +1,18 @@
+import { CheckCircleIcon, Loader2Icon, XCircleIcon } from 'lucide-react'
 import type { ComponentProps } from 'react'
-
 import { cn } from '@/lib/utils'
+import type { NodeStatus } from './node-status-indicator'
 
-export function BaseNode({ className, ...props }: ComponentProps<'div'>) {
+interface BaseNodeProps extends ComponentProps<'div'> {
+  status?: NodeStatus
+}
+
+export function BaseNode({ className, status = 'initial', children, ...props }: BaseNodeProps) {
   return (
     <div
       className={cn(
         'bg-card text-card-foreground relative rounded-md border',
-        'hover:ring-1',
-        // React Flow displays node elements inside of a `NodeWrapper`
-        // component, which compiles down to a div with the class
-        // `react-flow__node`. When a node is selected, the class `selected` is
-        // added to the `react-flow__node` element. This allows us to style the
-        // node when it is selected.
+        'dark:hover:bg-accent hover:bg-purple-50',
         'in-[.selected]:border-muted-foreground',
         'in-[.selected]:shadow-lg',
         className,
@@ -20,7 +20,18 @@ export function BaseNode({ className, ...props }: ComponentProps<'div'>) {
       // biome-ignore lint/a11y/noNoninteractiveTabindex: default component
       tabIndex={0}
       {...props}
-    />
+    >
+      {children}
+      {status === 'error' && (
+        <XCircleIcon className="absolute bottom-0.5 right-0.5 size-2 dark:text-red-400 text-red-700/50stroke-3" />
+      )}
+      {status === 'success' && (
+        <CheckCircleIcon className="absolute bottom-0.5 right-0.5 size-2 dark:text-emerald-600 text-green-700/50 stroke-3" />
+      )}
+      {status === 'loading' && (
+        <Loader2Icon className="animate-spin absolute -bottom-0.5 -right-0.5 size-2 text-blue-700/80 stroke-3" />
+      )}
+    </div>
   )
 }
 
