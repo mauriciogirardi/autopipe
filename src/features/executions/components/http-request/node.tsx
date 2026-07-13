@@ -5,13 +5,12 @@ import type { HTTPMethod } from 'better-auth'
 import { GlobeIcon } from 'lucide-react'
 import { memo, useState } from 'react'
 import { BaseExecutionNode } from '../base-execution-node'
-import { type FormData, HttpRequestDialog } from './dialog'
+import { HttpRequestDialog, type HttpRequestFormData } from './dialog'
 
 type HttpRequestNodeData = {
   endpoint?: string
   method?: HTTPMethod
   body?: string
-  [key: string]: unknown
 }
 
 type HttpRequestNodeType = Node<HttpRequestNodeData>
@@ -22,7 +21,7 @@ export const HttpRequestNode = memo((props: NodeProps<HttpRequestNodeType>) => {
 
   const nodeStatus = 'initial'
 
-  const handleSubmit = ({ endpoint, method, body }: FormData) => {
+  const handleSubmit = (values: HttpRequestFormData) => {
     setNodes((nodes) =>
       nodes.map((node) => {
         if (node.id === props.id) {
@@ -30,9 +29,7 @@ export const HttpRequestNode = memo((props: NodeProps<HttpRequestNodeType>) => {
             ...node,
             data: {
               ...node.data,
-              endpoint,
-              method,
-              body,
+              ...values,
             },
           }
         }
@@ -55,9 +52,7 @@ export const HttpRequestNode = memo((props: NodeProps<HttpRequestNodeType>) => {
         onOpenChange={setDialogOpen}
         open={dialogOpen}
         onSubmit={handleSubmit}
-        defaultEndpoint={nodeData.endpoint}
-        defaultMethod={nodeData.method}
-        defaultBody={nodeData.body}
+        defaultValues={nodeData}
       />
       <BaseExecutionNode
         {...props}

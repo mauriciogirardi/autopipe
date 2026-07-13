@@ -19,7 +19,7 @@ import { useAtomValue, useSetAtom } from 'jotai'
 import { Loader2Icon, SaveIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ErrorView, LoadingView } from '@/components/entity-components'
 import {
   Breadcrumb,
@@ -38,8 +38,10 @@ import {
   useUpdateWorkflow,
   useUpdateWorkflowName,
 } from '@/features/workflows/hooks/use-workflows'
+import { NodeType } from '@/generated/prisma/enums'
 import { editorAtom } from '../store/atoms'
 import { EditorNodeButton } from './editor-node-button'
+import { ExecuteWorkflowButton } from './execute-workflow-button'
 
 type EditorProps = {
   workflowId: string
@@ -71,6 +73,10 @@ export const Editor = ({ workflowId }: EditorProps) => {
     (params: Connection) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
     [],
   )
+
+  const hasManualTrigger = useMemo(() => {
+    return nodes.some((node) => node.type === NodeType.MANUAL_TRIGGER)
+  }, [nodes])
 
   const bgColor =
     resolvedTheme === 'light' ? 'oklch(0.9730 0.0133 286.1503)' : 'oklch(0.2284 0.0384 282.9324)'
@@ -107,6 +113,11 @@ export const Editor = ({ workflowId }: EditorProps) => {
         <Panel position="top-right">
           <EditorNodeButton />
         </Panel>
+        {hasManualTrigger && (
+          <Panel position="bottom-center">
+            <ExecuteWorkflowButton workflowId={workflowId} />
+          </Panel>
+        )}
       </ReactFlow>
     </div>
   )

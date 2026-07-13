@@ -1,7 +1,6 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { HTTPMethod } from 'better-auth'
 import { Loader2Icon } from 'lucide-react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -40,38 +39,34 @@ const formSchema = z.object({
   body: z.string().optional(),
 })
 
-export type FormData = z.infer<typeof formSchema>
+export type HttpRequestFormData = z.infer<typeof formSchema>
 
 interface HttpRequestDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit?: (values: FormData) => void
-  defaultEndpoint?: string
-  defaultMethod?: HTTPMethod
-  defaultBody?: string
+  onSubmit?: (values: HttpRequestFormData) => void
+  defaultValues?: Partial<HttpRequestFormData>
 }
 
 export function HttpRequestDialog({
   onOpenChange,
   open,
-  defaultEndpoint = '',
-  defaultMethod = 'GET',
   onSubmit,
-  defaultBody = '',
+  defaultValues,
 }: HttpRequestDialogProps) {
-  const form = useForm<FormData>({
+  const form = useForm<HttpRequestFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      body: defaultBody,
-      endpoint: defaultEndpoint,
-      method: defaultMethod,
+      body: defaultValues?.body || '',
+      endpoint: defaultValues?.endpoint || '',
+      method: defaultValues?.method || 'GET',
     },
   })
 
   const watchMethod = form.watch('method')
   const showBodyFiled = ['POST', 'PUT', 'PATCH'].includes(watchMethod)
 
-  const handleSubmit = (values: FormData) => {
+  const handleSubmit = (values: HttpRequestFormData) => {
     onSubmit?.(values)
     onOpenChange(false)
   }
@@ -79,12 +74,12 @@ export function HttpRequestDialog({
   useEffect(() => {
     if (open) {
       form.reset({
-        body: defaultBody,
-        endpoint: defaultEndpoint,
-        method: defaultMethod,
+        body: defaultValues?.body || '',
+        endpoint: defaultValues?.endpoint || '',
+        method: defaultValues?.method || 'GET',
       })
     }
-  }, [open, defaultBody, defaultMethod, defaultEndpoint, form.reset])
+  }, [open, defaultValues, form.reset])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
