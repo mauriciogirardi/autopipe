@@ -8,6 +8,7 @@ import { BaseExecutionNode } from '../base-execution-node'
 import { HttpRequestDialog, type HttpRequestFormData } from './dialog'
 
 type HttpRequestNodeData = {
+  variableName?: string
   endpoint?: string
   method?: HTTPMethod
   body?: string
