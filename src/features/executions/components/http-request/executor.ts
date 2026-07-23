@@ -1,14 +1,20 @@
 import type { HTTPMethod } from 'better-auth'
+import Handlebars from 'handlebars'
 import { NonRetriableError } from 'inngest'
 import ky, { type Options as KyOptions } from 'ky'
 import type { NodeExecutor } from '@/features/executions/types'
 
 type HttpRequestExecutorData = {
-  variableName?: string
-  endpoint?: string
-  method?: HTTPMethod
+  variableName: string
+  endpoint: string
+  method: HTTPMethod
   body?: string
 }
+
+Handlebars.registerHelper('json', (ctx) => {
+  const stringified = JSON.stringify(ctx, null, 2)
+  return new Handlebars.SafeString(stringified)
+})
 
 export const httpRequestExecutor: NodeExecutor<HttpRequestExecutorData> = async ({
   data,
@@ -23,16 +29,21 @@ export const httpRequestExecutor: NodeExecutor<HttpRequestExecutorData> = async 
     throw new NonRetriableError('Variable name not configured.')
   }
 
-  const variableName = data.variableName
+  if (!data.method) {
+    throw new NonRetriableError('Method not configured.')
+  }
 
   const result = await step.run('http-request', async () => {
-    const endpoint = data.endpoint ?? ''
+    const endpoint = Handlebars.compile(data.endpoint)(context)
     const method = data.method ?? 'GET'
 
     const options: KyOptions = { method }
 
     if (['POST', 'PUT', 'PATCH'].includes(method)) {
-      options.body = data.body
+      const resolved = Handlebars.compile(data.body || '{}')(context)
+      JSON.parse(resolved)
+
+      options.body = resolved
       options.headers = {
         'Content-Type': 'application/json',
       }
@@ -55,7 +66,7 @@ export const httpRequestExecutor: NodeExecutor<HttpRequestExecutorData> = async 
 
     return {
       ...context,
-      [variableName]: responsePayload,
+      [data.variableName]: responsePayload,
     }
   })
 

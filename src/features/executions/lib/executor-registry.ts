@@ -3,7 +3,7 @@ import { NodeType } from '@/generated/prisma/enums'
 import { httpRequestExecutor } from '../components/http-request/executor'
 import type { NodeExecutor } from '../types'
 
-export const executorRegistry: Record<NodeType, NodeExecutor> = {
+export const executorRegistry: Record<NodeType, NodeExecutor<any>> = {
   [NodeType.MANUAL_TRIGGER]: manualTriggerExecutor,
   [NodeType.HTTP_REQUEST]: httpRequestExecutor,
   [NodeType.INITIAL]: manualTriggerExecutor,
